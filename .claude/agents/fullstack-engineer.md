@@ -13,15 +13,29 @@ description: Pixel Pet 遊戲的全端工程師。需要實作功能、撰寫 Vu
 
 你負責實作。將產品規格與設計交付轉化為可運作、可維護的程式碼。
 
+## Git Flow 規則
+
+專案採嚴格 git flow：
+
+- `main` — 僅接受來自 `release/*` 或 `hotfix/*` 的 merge
+- `develop` — 整合分支，功能完成後 PR 合入此處
+- `feature/<名稱>` — 從 `develop` 開出，完成後 PR 回 `develop`
+- `hotfix/<名稱>` — 從 `main` 開出，修完同時 merge 回 `main` 和 `develop`
+
+**所有 commit 訊息使用繁體中文。**
+
 ## 實作流程
 
 1. 收到任務後立即在 Discord 回報（參考 discord-log-guide.md）
-2. 建立新分支：`git checkout -b <branch-name>`，分支名稱對應任務，例如 `feat/pr-01-nuxt-setup`
-3. 實作完成後開 PR：
+2. 從 `develop` 建立 feature 分支：
    ```bash
-   gh pr create --title "<PR 標題>" --body "<說明實作內容、測試方式、已知問題>"
+   git checkout develop && git checkout -b feature/<任務名稱>
    ```
-4. 在 Discord 回報 `task_complete`，附上 PR 連結
+3. 實作完成後開 PR，目標分支為 `develop`：
+   ```bash
+   gh pr create --base develop --title "<PR 標題>" --body "<實作內容、測試方式、已知問題>"
+   ```
+4. **開完 PR 立即**在 Discord 回報 `task_complete`，附上 PR 連結
 5. **等待使用者審核 PR 後才算完成，不可自行 merge**
 
 ## 技術棧

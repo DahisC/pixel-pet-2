@@ -21,10 +21,12 @@ interface LogEntry {
 }
 
 // 各 agent 的顯示設定
-const AGENT_CONFIG: Record<Agent, { name: string; emoji: string }> = {
+const REPO_RAW = 'https://raw.githubusercontent.com/DahisC/pixel-pet-2/feature/landing-page'
+
+const AGENT_CONFIG: Record<Agent, { name: string; emoji: string; avatar?: string }> = {
   pm:       { name: 'PM',          emoji: '📋' },
   designer: { name: 'UI Designer', emoji: '🎨' },
-  engineer: { name: '工程師',       emoji: '⚙️' },
+  engineer: { name: '工程師',       emoji: '⚙️', avatar: `${REPO_RAW}/bot/assets/avatars/engineer.png` },
 }
 
 const EVENT_LABEL: Record<EventType, string> = {
@@ -47,15 +49,22 @@ export async function log(entry: LogEntry): Promise<void> {
   const config = AGENT_CONFIG[agent]
   const webhookUrl = getWebhookUrl()
 
+  const detailBlock = detail
+    ? detail.split('\n').map(line => `> ${line}`).join('\n')
+    : null
+
   const lines = [
-    `${EVENT_LABEL[event]}　${message}`,
-    ...(detail ? ['', detail] : [])
+    `**${EVENT_LABEL[event]}**　${message}`,
+    ...(detailBlock ? ['', detailBlock] : [])
   ]
 
   const body = {
     username: `${config.emoji} ${config.name}`,
+    avatar_url: config.avatar,
     content: lines.join('\n')
   }
+
+  console.log('送出 body:', JSON.stringify(body, null, 2))
 
   const res = await fetch(webhookUrl, {
     method: 'POST',
