@@ -5,62 +5,54 @@ const canvas = ref<HTMLCanvasElement | null>(null)
 
 const SCALE = 8
 
-const PALETTE: Record<number, string | null> = {
-  0: null,        // transparent
-  1: '#4ade80',   // body
-  2: '#22c55e',   // shadow / underside
-  3: '#86efac',   // highlight
-  4: '#1a1a2e',   // eye
-}
-
 // 2 frames: normal → squished (idle bounce)
-const FRAMES: number[][][] = [
+const FRAMES: (string | null)[][][] = [
   [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-    [0,0,0,1,1,3,1,1,1,1,3,1,1,0,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,1,1,1,4,4,1,1,4,4,1,1,1,0,0],
-    [0,0,1,1,1,4,4,1,1,4,4,1,1,1,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-    [0,0,0,1,1,2,1,1,1,1,2,1,1,0,0,0],
-    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null,null,null],
+    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
+    [null,null,null,'#4ade80','#4ade80','#86efac','#4ade80','#4ade80','#4ade80','#4ade80','#86efac','#4ade80','#4ade80',null,null,null],
+    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
+    [null,null,'#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80',null,null],
+    [null,null,'#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80',null,null],
+    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
+    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
+    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
+    [null,null,null,'#4ade80','#4ade80','#22c55e','#4ade80','#4ade80','#4ade80','#4ade80','#22c55e','#4ade80','#4ade80',null,null,null],
+    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
+    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
+    [null,null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
   ],
   [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
-    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
-    [0,0,1,1,3,1,1,1,1,1,1,3,1,1,0,0],
-    [0,1,1,1,1,1,4,4,1,4,4,1,1,1,1,0],
-    [0,1,1,1,1,1,4,4,1,4,4,1,1,1,1,0],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-    [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-    [0,0,1,1,2,1,1,1,1,1,1,2,1,1,0,0],
-    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
-    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null,null,null],
+    [null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null],
+    [null,null,'#4ade80','#4ade80','#86efac','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#86efac','#4ade80','#4ade80',null,null],
+    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80','#4ade80',null],
+    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80','#4ade80',null],
+    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null],
+    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null],
+    [null,null,'#4ade80','#4ade80','#22c55e','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#22c55e','#4ade80','#4ade80',null,null],
+    [null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null],
+    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
   ],
 ]
 
 let frameIndex = 0
 let timer: ReturnType<typeof setInterval>
 
-function draw(ctx: CanvasRenderingContext2D, frame: number[][]) {
+function draw(ctx: CanvasRenderingContext2D, frame: (string | null)[][]) {
   ctx.clearRect(0, 0, 16 * SCALE, 16 * SCALE)
   for (let y = 0; y < 16; y++) {
     for (let x = 0; x < 16; x++) {
-      const color = PALETTE[frame[y][x]]
+      const color = frame[y][x]
       if (color) {
         ctx.fillStyle = color
         ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE)
