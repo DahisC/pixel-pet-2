@@ -1,0 +1,25 @@
+{
+  "name": "pixel-buddy-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "setup": "node dist/setup.js",
+    "dev": "tsx src/index.ts",
+    "dev:setup": "tsx src/setup.ts",
+    "log": "tsx scripts/log.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.51.0",
+    "@octokit/rest": "^21.0.0",
+    "discord.js": "^14.16.0",
+    "dotenv": "^16.4.0",
+    "simple-git": "^3.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
