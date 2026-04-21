@@ -1,48 +1,10 @@
 <script setup lang="ts">
 import { usePixelCanvas } from '~/composables/usePixelCanvas'
+import { DEFAULT_PET_FRAMES } from '~/data/petSprites'
 
 const SCALE = 8
 
-const FRAMES: (string | null)[][][] = [
-  [
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null,null,null],
-    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
-    [null,null,null,'#4ade80','#4ade80','#86efac','#4ade80','#4ade80','#4ade80','#4ade80','#86efac','#4ade80','#4ade80',null,null,null],
-    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
-    [null,null,'#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80',null,null],
-    [null,null,'#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80',null,null],
-    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
-    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
-    [null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null],
-    [null,null,null,'#4ade80','#4ade80','#22c55e','#4ade80','#4ade80','#4ade80','#4ade80','#22c55e','#4ade80','#4ade80',null,null,null],
-    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
-    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
-    [null,null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-  ],
-  [
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null,null,null],
-    [null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null],
-    [null,null,'#4ade80','#4ade80','#86efac','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#86efac','#4ade80','#4ade80',null,null],
-    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80','#4ade80',null],
-    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#1a1a2e','#1a1a2e','#4ade80','#4ade80','#4ade80','#4ade80',null],
-    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null],
-    [null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null],
-    [null,null,'#4ade80','#4ade80','#22c55e','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#22c55e','#4ade80','#4ade80',null,null],
-    [null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null],
-    [null,null,null,null,'#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80','#4ade80',null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
-  ],
-]
-
-const { canvas, size } = usePixelCanvas(FRAMES, SCALE, 400)
+const { canvas, size } = usePixelCanvas(DEFAULT_PET_FRAMES, SCALE, 400)
 </script>
 
 <template>
