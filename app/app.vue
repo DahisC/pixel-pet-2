@@ -1,7 +1,5 @@
 <template>
-  <div class="stage">
-    <PixelPet />
-  </div>
+  <NuxtPage />
 </template>
 
 <style>
@@ -14,14 +12,5 @@
 html, body {
   width: 100%;
   height: 100%;
-}
-
-.stage {
-  width: 100vw;
-  height: 100vh;
-  background: #1a1a2e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 </style>
