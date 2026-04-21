@@ -35,10 +35,10 @@ npm run log --prefix bot -- engineer question "<問題描述>" "<嘗試過什麼
 
 ## 條列式內容
 
-detail 有多個項目時，用 `\n` 換行，並加上 `•` 符號：
+detail 有多個項目時，用 `\n` 換行，並用 `-` 開頭（Discord 原生 Markdown bullet list）：
 
 ```bash
-npm run log --prefix bot -- engineer task_complete "Phase 1 共規劃 6 個 PR" "• PR-01 Nuxt 4 基礎架構\n• PR-02 Electron 整合\n• PR-03 透明視窗"
+npm run log --prefix bot -- engineer task_complete "Phase 1 共規劃 6 個 PR" "- PR-01 Nuxt 4 基礎架構\n- PR-02 Electron 整合\n- PR-03 透明視窗"
 ```
 
 ## 原則
