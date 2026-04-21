@@ -15,30 +15,26 @@
 **分支：** `phase-1`
 
 **進度總覽**
-- 總任務數：5
+- 總任務數：3
 - 已完成：0
 - 進行中：0
-- 待開始：5
+- 待開始：3
 
 **任務清單**
 
 | # | 任務 | 狀態 | 分支 | 備註 |
 |---|------|------|------|------|
-| 1 | 建立 `/editor` 路由與頁面骨架 | ⬜ 待開始 | `feature/editor-page-scaffold` | 空白頁面、導覽列連結，不含任何功能元件 |
-| 2 | 實作 16x16 互動畫布元件 | ⬜ 待開始 | `feature/editor-canvas` | 點擊塗色、滑鼠拖曳連續繪製；畫布狀態存於 Pinia store |
-| 3 | 實作顏色選擇器元件 | ⬜ 待開始 | `feature/editor-color-picker` | 調色盤 UI 元件，與畫布 store 串接，選色後繪製套用新色 |
-| 4 | 實作橡皮擦工具與清除全畫布按鈕 | ⬜ 待開始 | `feature/editor-eraser-clear` | 橡皮擦將格子設為透明；清除按鈕清空整幀；工具切換 UI |
-| 5 | 實作即時預覽區塊 | ⬜ 待開始 | `feature/editor-preview` | 重用 `usePixelCanvas`，與 store 同步，播放動畫 |
+| 1 | 編輯器頁面 + 畫布 | ⬜ 待開始 | `feature/editor-canvas` | 路由、`useEditorStore`、16x16 畫布、點擊/拖曳繪製 |
+| 2 | 工具列 | ⬜ 待開始 | `feature/editor-toolbar` | 選色器、橡皮擦、清除全畫布按鈕 |
+| 3 | 即時預覽 | ⬜ 待開始 | `feature/editor-preview` | 重用 `usePixelCanvas`，與 store 同步，播放動畫 |
 
 **實作順序說明**
 
-任務 1 → 2 → 3 → 4 → 5，每個任務對應一個獨立 PR，目標分支皆為 `develop`。
+任務 1 → 2 → 3，每個任務對應一個獨立 PR，目標分支皆為 `develop`。
 
-- **任務 1** 先建好路由殼層，後續任務才有地方掛載元件
-- **任務 2** 是核心，畫布元件與 store 到位後，3、4、5 才能串接
-- **任務 3** 依賴任務 2 的 store 結構，實作選色並更新 `currentColor`
-- **任務 4** 依賴任務 2 的工具狀態管理（`activeTool`），在同一 store 擴充
-- **任務 5** 依賴任務 2 的 store 資料，重用現有 `usePixelCanvas` composable 渲染
+- **任務 1** 是核心，路由、store、畫布互動一起到位
+- **任務 2** 依賴任務 1 的 store 結構，擴充工具與選色
+- **任務 3** 依賴任務 1 的 store 資料，重用 `usePixelCanvas` 渲染預覽
 
 **狀態說明**
 - ⬜ 待開始
