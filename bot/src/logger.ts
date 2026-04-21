@@ -26,7 +26,7 @@ const REPO_RAW = 'https://raw.githubusercontent.com/DahisC/pixel-pet-2/feature/l
 const AGENT_CONFIG: Record<Agent, { name: string; emoji: string; avatar?: string }> = {
   pm:       { name: 'PM',          emoji: '📋' },
   designer: { name: 'UI Designer', emoji: '🎨' },
-  engineer: { name: '工程師',       emoji: '⚙️', avatar: `${REPO_RAW}/bot/assets/avatars/engineer.png` },
+  engineer: { name: '工程師',       emoji: '⚙️', avatar: `${REPO_RAW}/bot/assets/avatars/engineer.jpg` },
 }
 
 const EVENT_LABEL: Record<EventType, string> = {
