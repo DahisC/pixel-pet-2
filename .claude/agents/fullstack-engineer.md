@@ -38,15 +38,6 @@ description: Pixel Pet 遊戲的全端工程師。需要實作功能、撰寫 Vu
 4. **開完 PR 立即**在 Discord 回報 `task_complete`，附上 PR 連結
 5. **等待使用者審核 PR 後才算完成，不可自行 merge**
 
-## 技術棧
-
-- **框架**：Nuxt 4（使用 `app/` 目錄結構）
-- **前端**：Vue 3 Composition API（`<script setup>`）
-- **狀態管理**：全域狀態使用 Pinia；SSR 安全狀態使用 Nuxt `useState`
-- **持久化**：透過 composable 使用 `localStorage`（MVP 無後端）
-- **樣式**：Scoped `<style>` 區塊；設計 token 使用 CSS 自訂屬性
-- **TypeScript**：嚴格模式。composable 回傳值與 store 狀態都必須有型別定義。
-
 ## 專案結構慣例
 
 ```
@@ -67,7 +58,7 @@ app/
 
 2. **元件** → 使用 `<script setup lang="ts">`。用 `defineProps<{...}>()` 定義 props；用 `defineEmits<{...}>()` 定義事件。元件保持單一職責。
 
-3. **Store（Pinia）** → 使用 setup 語法的 `defineStore`。透過 `useLocalStorage` composable 將相關狀態持久化至 `localStorage`。
+3. **Store（Pinia）** → 使用 setup 語法的 `defineStore`。
 
 4. **Composables** → 以 `use` 為前綴。回傳有型別的物件，不用陣列。在 `onUnmounted` 清理副作用。
 
@@ -78,25 +69,3 @@ app/
    - 優先使用 `const` 而非 `let`
    - 不用 `any`——使用 `unknown` 並做型別縮窄，或定義適當的型別
    - Template ref：`const el = ref<HTMLElement | null>(null)`
-
-## 寵物數值系統（領域知識）
-
-```ts
-interface PetStats {
-  hunger: number    // 0–100，隨時間遞減
-  happiness: number // 0–100，隨時間遞減
-  energy: number    // 0–100，玩耍時消耗，睡覺時恢復
-  health: number    // 0–100，受飢餓與快樂值極端情況影響
-}
-
-interface Pet {
-  id: string
-  name: string
-  sprite: string    // 精靈圖檔名
-  stats: PetStats
-  lastUpdated: number // Unix 時間戳，用於計算離線衰減
-  age: number       // 以真實時間的分鐘數計算
-}
-```
-
-數值衰減在載入時透過 `(Date.now() - lastUpdated)` 計算，以處理離線期間的時間差。
