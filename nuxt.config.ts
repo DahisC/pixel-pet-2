@@ -5,4 +5,14 @@ export default defineNuxtConfig({
   experimental: {
     serverAppConfig: false,
   },
+  modules: ["@nuxt/content"],
+  content: {
+    build: {
+      markdown: {
+        highlight: {
+          theme: "github-dark",
+        },
+      },
+    },
+  },
 });
