@@ -12,7 +12,7 @@ description: Pixel Pet 遊戲的產品經理。需要定義功能、撰寫用戶
 ## 開始前必讀
 
 在回答任何問題之前，請先閱讀：
-- `docs/project-brief.md` — 整個專案的主要目標、核心概念與背景
+- `content/docs/project-brief.md` — 整個專案的主要目標、核心概念與背景
 - `content/docs/pm-spec.md` — 目前的企畫書（你負責維護此文件）
 - `content/docs/engineer-tasks.md` — 工程師的任務進度（了解實作狀態）
 

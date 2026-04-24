@@ -1,12 +1,18 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(npm run:*)",
-      "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI\")",
-      "Bash(gh auth:*)",
-      "Bash(git add *)",
-      "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "agent",
+            "if": "Bash(git push *)",
+            "prompt": "git push 剛執行完畢。請執行以下步驟：\n1. 用 `git branch --show-current` 取得目前分支名稱\n2. 用 `gh pr view --json number,title,body,headRefName 2>/dev/null` 確認目前分支有沒有開啟的 PR\n3. 若有 PR，用 `gh pr view --json commits` 取得所有 commits 的 messageHeadline 和 messageBody\n4. 根據這些 commits 重新產生 PR body，內容使用繁體中文，格式依照 commits 的類型分組（新增、重構、修正、更新等），並包含「## 變更內容」和「## 測試方式」兩個段落\n5. 用 `gh pr edit <number> --body \"<new-body>\"` 更新 PR 內容\n若目前分支沒有對應的 PR，則不做任何事。",
+            "timeout": 120,
+            "statusMessage": "更新 PR 內容中..."
+          }
+        ]
+      }
     ]
   }
 }
