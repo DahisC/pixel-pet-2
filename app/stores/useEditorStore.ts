@@ -16,7 +16,13 @@ function createEmptyFrame(): Frame {
 }
 
 export const useEditorStore = defineStore('editor', () => {
-  const actions = ref<Action[]>([{ name: 'idle', frames: [createEmptyFrame()] }])
+  const SYSTEM_ACTIONS = ['idle', 'walk', 'sleep'] as const
+
+  const actions = ref<Action[]>([
+    { name: 'idle', frames: [createEmptyFrame()] },
+    { name: 'walk', frames: [] },
+    { name: 'sleep', frames: [] },
+  ])
   const currentActionIndex = ref(0)
   const currentFrameIndex = ref(0)
   const selectedColor = ref('#4ade80')
@@ -50,6 +56,14 @@ export const useEditorStore = defineStore('editor', () => {
     currentFrameIndex.value = index
   }
 
+  function selectAction(index: number) {
+    currentActionIndex.value = index
+    currentFrameIndex.value = 0
+    if (actions.value[index].frames.length === 0) {
+      actions.value[index].frames.push(createEmptyFrame())
+    }
+  }
+
   function selectColor(color: string) {
     selectedColor.value = color
   }
@@ -76,6 +90,8 @@ export const useEditorStore = defineStore('editor', () => {
     duplicateFrame,
     deleteFrame,
     selectFrame,
+    SYSTEM_ACTIONS,
+    selectAction,
     selectColor,
     setTool,
     clearFrame,

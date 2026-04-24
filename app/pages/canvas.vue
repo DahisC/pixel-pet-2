@@ -77,6 +77,7 @@ function onKeyDown(e: KeyboardEvent) {
 
 onMounted(() => window.addEventListener('keydown', onKeyDown))
 onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
+
 </script>
 
 <template>
@@ -112,6 +113,23 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
           <input type="color" class="color-input" :value="customColor" @input="onCustomColorChange" />
           <div class="current-color-preview" :style="{ backgroundColor: store.selectedColor }" />
           <span class="color-label">{{ store.selectedColor }}</span>
+        </div>
+      </div>
+
+      <div class="tool-divider" />
+
+      <div class="tool-divider" />
+
+      <div class="tool-group">
+        <span class="tool-label">動作</span>
+        <div class="actions-row">
+          <button
+            v-for="(action, i) in store.actions"
+            :key="i"
+            class="action-tab"
+            :class="{ active: i === store.currentActionIndex }"
+            @click="store.selectAction(i)"
+          >{{ action.name }}</button>
         </div>
       </div>
 
@@ -456,4 +474,18 @@ kbd {
 }
 
 .frame-add:hover { border-color: #4ade80; color: #4ade80; }
+
+.action-tab {
+  padding: 5px 14px;
+  border-radius: 4px;
+  border: 1px solid #4a5568;
+  background: #1a1a2e;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  color: #a0aec0;
+}
+
+.action-tab:hover { border-color: #718096; color: #e2e8f0; }
+.action-tab.active { border-color: #4ade80; color: #4ade80; }
 </style>
