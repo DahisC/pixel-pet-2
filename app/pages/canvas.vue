@@ -165,7 +165,18 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
         >
           <FrameThumbnail :frame="frame" />
           <span class="frame-index">{{ i + 1 }}</span>
+          <div class="frame-actions">
+            <button class="frame-btn" title="複製" @click.stop="store.duplicateFrame(i)">⧉</button>
+            <button
+              class="frame-btn frame-btn-danger"
+              title="刪除"
+              :disabled="store.currentAction.frames.length <= 1"
+              @click.stop="store.deleteFrame(i)"
+            >✕</button>
+          </div>
         </div>
+
+        <button class="frame-add" @click="store.addFrame()">＋ 新增幀</button>
       </div>
     </div>
   </div>
@@ -409,4 +420,40 @@ kbd {
   font-size: 10px;
   color: #718096;
 }
+
+.frame-actions {
+  display: flex;
+  gap: 2px;
+}
+
+.frame-btn {
+  background: transparent;
+  border: none;
+  color: #718096;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  line-height: 1;
+}
+
+.frame-btn:hover { background: #2d3748; color: #e2e8f0; }
+.frame-btn-danger:hover { color: #fc8181; }
+.frame-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.frame-add {
+  flex-shrink: 0;
+  align-self: center;
+  background: transparent;
+  border: 1px dashed #4a5568;
+  color: #718096;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.frame-add:hover { border-color: #4ade80; color: #4ade80; }
 </style>
