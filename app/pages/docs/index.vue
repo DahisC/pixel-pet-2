@@ -1,7 +1,8 @@
 <template>
   <div class="docs-index">
     <nav class="docs-nav">
-      <NuxtLink to="/" class="nav-back">← 返回</NuxtLink>
+      <NuxtLink to="/" class="nav-back">← 首頁</NuxtLink>
+      <NuxtLink to="/canvas" class="nav-back">編輯器</NuxtLink>
     </nav>
 
     <main class="docs-main">
@@ -42,6 +43,8 @@
   padding: 0.75rem 2rem;
   background: #16213e;
   border-bottom: 1px solid #0f3460;
+  display: flex;
+  gap: 1.5rem;
 }
 
 .nav-back {

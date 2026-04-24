@@ -16,8 +16,8 @@ const { data: doc } = await useAsyncData(
     <nav class="docs-nav">
       <NuxtLink to="/" class="nav-back">← 返回</NuxtLink>
       <div class="nav-links">
-        <NuxtLink to="/docs/pm-spec" class="nav-link">企畫書</NuxtLink>
-        <NuxtLink to="/docs/engineer-tasks" class="nav-link">工程任務</NuxtLink>
+        <NuxtLink to="/canvas" class="nav-link">編輯器</NuxtLink>
+        <NuxtLink to="/docs" class="nav-link">Docs</NuxtLink>
       </div>
     </nav>
 

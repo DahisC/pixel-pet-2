@@ -1,7 +1,10 @@
 <template>
   <div class="stage">
     <PixelPet />
-    <NuxtLink to="/docs" class="docs-btn">📄 Docs</NuxtLink>
+    <nav class="nav">
+      <NuxtLink to="/canvas" class="nav-btn">編輯器</NuxtLink>
+      <NuxtLink to="/docs" class="nav-btn">Docs</NuxtLink>
+    </nav>
   </div>
 </template>
 
@@ -16,10 +19,15 @@
   position: relative;
 }
 
-.docs-btn {
+.nav {
   position: absolute;
   bottom: 1.5rem;
   right: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-btn {
   color: #94a3b8;
   text-decoration: none;
   font-family: 'Courier New', Courier, monospace;
@@ -30,8 +38,8 @@
   transition: color 0.15s, border-color 0.15s;
 }
 
-.docs-btn:hover {
+.nav-btn:hover {
   color: #e2e8f0;
-  border-color: #6d28d9;
+  border-color: #4ade80;
 }
 </style>
