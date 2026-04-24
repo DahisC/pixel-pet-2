@@ -13,8 +13,8 @@ function draw() {
   const s = (props.size ?? 16) * SCALE
   ctx.clearRect(0, 0, s, s)
   for (let y = 0; y < props.frame.length; y++) {
-    for (let x = 0; x < props.frame[y].length; x++) {
-      const color = props.frame[y][x]
+    for (let x = 0; x < (props.frame[y]?.length ?? 0); x++) {
+      const color = props.frame[y]?.[x]
       if (color) {
         ctx.fillStyle = color
         ctx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE)
