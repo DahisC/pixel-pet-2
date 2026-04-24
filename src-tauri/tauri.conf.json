@@ -5,7 +5,7 @@
   "identifier": "com.pixelpet.app",
   "build": {
     "frontendDist": "../.output/public",
-    "devUrl": "http://localhost:3000",
+    "devUrl": "http://localhost:3000/desktop",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run generate"
   },
@@ -13,10 +13,12 @@
     "windows": [
       {
         "title": "Pixel Pet",
-        "width": 800,
-        "height": 600,
-        "resizable": true,
-        "fullscreen": false
+        "width": 128,
+        "height": 128,
+        "resizable": false,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true
       }
     ],
     "security": {
