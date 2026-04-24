@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+
 import { useEditorStore } from '~/stores/useEditorStore'
+import { usePixelCanvas } from '~/composables/usePixelCanvas'
 
 const CELL_SIZE = 24
 const PALETTE = [
@@ -14,7 +16,9 @@ const PALETTE = [
 const store = useEditorStore()
 const customColor = ref(store.selectedColor)
 const isPainting = ref(false)
-const history = ref<ReturnType<typeof store.currentFrame>[]>([])
+import type { Frame } from '~/stores/useEditorStore'
+
+const history = ref<Frame[]>([])
 
 function snapshotFrame() {
   return store.currentFrame.map((row) => [...row])
@@ -23,12 +27,17 @@ function snapshotFrame() {
 function onMouseDown(row: number, col: number, event: MouseEvent) {
   event.preventDefault()
   if (store.tool === 'eyedropper') {
-    const color = store.currentFrame[row][col]
+    const color = store.currentFrame[row]?.[col]
     if (color) {
       store.selectColor(color)
       customColor.value = color
     }
     store.setTool('draw')
+    return
+  }
+  if (store.tool === 'fill') {
+    history.value.push(snapshotFrame())
+    store.gradientFill(row, col)
     return
   }
   history.value.push(snapshotFrame())
@@ -71,12 +80,23 @@ function onKeyDown(e: KeyboardEvent) {
   if (e.target instanceof HTMLInputElement) return
   if (e.key === 'q' || e.key === 'Q') store.setTool('draw')
   if (e.key === 'e' || e.key === 'E') store.setTool(store.tool === 'eyedropper' ? 'draw' : 'eyedropper')
+  if (e.key === 'f' || e.key === 'F') store.setTool(store.tool === 'fill' ? 'draw' : 'fill')
   if (e.key === 'z' || e.key === 'Z') undo()
   if (e.key === 'Delete' || e.key === 'Backspace') clearGrid()
 }
 
 onMounted(() => window.addEventListener('keydown', onKeyDown))
 onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
+
+const previewFrames = computed(() => {
+  const frames = store.currentAction.frames
+  return frames.length > 0 ? frames : [store.currentFrame]
+})
+const previewInterval = computed(() =>
+  Math.round((store.duration * 1000) / previewFrames.value.length)
+)
+const PREVIEW_SCALE = 6
+const { canvas: previewCanvas } = usePixelCanvas(previewFrames, PREVIEW_SCALE, previewInterval)
 
 </script>
 
@@ -136,24 +156,43 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
       <div class="tool-divider" />
 
       <div class="tool-group">
+        <span class="tool-label">秒數</span>
+        <div class="fps-row">
+          <input
+            type="range"
+            min="0.5"
+            max="5"
+            step="0.5"
+            :value="store.duration"
+            class="fps-slider"
+            @input="store.duration = +($event.target as HTMLInputElement).value"
+          />
+          <span class="fps-label">{{ store.duration }}s</span>
+        </div>
+      </div>
+
+      <div class="tool-divider" />
+
+      <div class="tool-group">
         <span class="tool-label">操作</span>
         <div class="actions-row">
           <button class="btn" :class="store.tool === 'draw' ? 'btn-active' : 'btn-secondary'" @click="store.setTool('draw')">畫筆 <kbd>Q</kbd></button>
           <button class="btn" :class="store.tool === 'eyedropper' ? 'btn-active' : 'btn-secondary'" @click="store.setTool(store.tool === 'eyedropper' ? 'draw' : 'eyedropper')">吸色 <kbd>E</kbd></button>
+          <button class="btn" :class="store.tool === 'fill' ? 'btn-active' : 'btn-secondary'" @click="store.setTool(store.tool === 'fill' ? 'draw' : 'fill')">漸層填 <kbd>F</kbd></button>
           <button class="btn btn-secondary" :disabled="history.length === 0" @click="undo">上一步 <kbd>Z</kbd></button>
           <button class="btn btn-danger" @click="clearGrid">清除 <kbd>Del</kbd></button>
         </div>
       </div>
     </div>
 
-    <!-- 畫布 -->
+    <!-- 畫布 + 預覽 -->
     <main class="canvas-area">
       <div
         class="pixel-grid"
         :style="{
           gridTemplateColumns: `repeat(${store.GRID_SIZE}, ${CELL_SIZE}px)`,
           gridTemplateRows: `repeat(${store.GRID_SIZE}, ${CELL_SIZE}px)`,
-          cursor: store.tool === 'eyedropper' ? 'cell' : 'crosshair',
+          cursor: store.tool === 'eyedropper' ? 'cell' : store.tool === 'fill' ? 'copy' : 'crosshair',
         }"
         @mouseleave="onMouseLeaveGrid"
         @contextmenu.prevent
@@ -163,11 +202,22 @@ onUnmounted(() => window.removeEventListener('keydown', onKeyDown))
             v-for="c in store.GRID_SIZE"
             :key="`${r}-${c}`"
             class="pixel-cell"
-            :style="{ backgroundColor: store.currentFrame[r - 1][c - 1] ?? 'transparent' }"
+            :style="{ backgroundColor: store.currentFrame[r - 1]?.[c - 1] ?? 'transparent' }"
             @mousedown="(e) => onMouseDown(r - 1, c - 1, e)"
             @mouseenter="(e) => onMouseEnter(r - 1, c - 1, e)"
           />
         </template>
+      </div>
+
+      <!-- 即時預覽 -->
+      <div class="preview-wrap">
+        <span class="tool-label">即時預覽</span>
+        <canvas
+          ref="previewCanvas"
+          :width="store.GRID_SIZE * PREVIEW_SCALE"
+          :height="store.GRID_SIZE * PREVIEW_SCALE"
+          class="preview-canvas"
+        />
       </div>
     </main>
 
@@ -381,7 +431,38 @@ kbd {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 48px;
   min-height: 0;
+}
+
+.preview-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.preview-canvas {
+  image-rendering: pixelated;
+  border: 1px solid #4a5568;
+  background: #0d1117;
+}
+
+.fps-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fps-slider {
+  width: 80px;
+  accent-color: #4ade80;
+}
+
+.fps-label {
+  font-size: 12px;
+  color: #a0aec0;
+  width: 20px;
 }
 
 .pixel-grid {
