@@ -59,6 +59,40 @@
 
 ---
 
+## Phase 3 — 桌面版（Electron）整合
+
+**分支：** `phase-3`
+
+**進度總覽**
+- 總任務數：5
+- 已完成：0
+- 進行中：0
+- 待開始：5
+
+**任務清單**
+
+| # | 任務 | 狀態 | 備註 |
+|---|------|------|------|
+| 1 | Electron 基礎整合 | ⬜ 待開始 | Nuxt 4 + Electron 開發環境建立，main process 設定 |
+| 2 | 透明背景視窗 | ⬜ 待開始 | 視窗背景透明，寵物像素正常顯示 |
+| 3 | 寵物在螢幕底部走動 | ⬜ 待開始 | 載入玩家創作，螢幕底部自動左右移動並播放行走動畫 |
+| 4 | 置頂切換 | ⬜ 待開始 | 可切換寵物是否顯示在所有視窗之上 |
+| 5 | 滑鼠穿透 | ⬜ 待開始 | 預設穿透，互動時暫停穿透 |
+
+**實作順序說明**
+
+任務 1（Electron 環境）是所有任務的前提。優先完成任務 2（透明背景）與任務 3（寵物走動），驗證核心體驗後再做 4、5。
+
+**技術筆記**
+
+- 現有基礎：`usePixelCanvas.ts` 處理像素渲染，`useEditorStore`（Pinia）管理幀與動作資料，localStorage 已存讀寵物創作
+- Electron + Nuxt 4 整合：使用 `nuxt-electron`（或手動設定 main.ts + vite electron plugin）
+- 透明視窗：`BrowserWindow` 設定 `transparent: true`、`frame: false`、`backgroundColor: '#00000000'`
+- 滑鼠穿透：`win.setIgnoreMouseEvents(true, { forward: true })`，需要互動時暫時關閉
+- 走動邏輯：在 renderer 用 `setInterval` 更新 x 座標，碰牆反向，動畫幀切換
+
+---
+
 ## 文件格式說明
 
 每個階段應包含：
