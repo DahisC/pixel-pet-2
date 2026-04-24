@@ -5,7 +5,7 @@
   "identifier": "com.pixelpet.app",
   "build": {
     "frontendDist": "../.output/public",
-    "devUrl": "http://localhost:3000/desktop",
+    "devUrl": "http://localhost:3005/desktop",
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run generate"
   },
