@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   experimental: {
     serverAppConfig: false,
   },
-  modules: ["@nuxt/content"],
+  modules: ["@nuxt/content", "@pinia/nuxt"],
   content: {
     build: {
       markdown: {
