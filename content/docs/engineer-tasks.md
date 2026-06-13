@@ -6,7 +6,7 @@
 
 ## 目前階段
 
-**Phase 2 已完成** — 動畫幀管理與存檔。
+**Phase 2 已完成** — 動畫幀管理與存檔。Phase 3 進行中。
 
 ---
 
@@ -40,24 +40,41 @@
 
 ---
 
-## Phase 3 — 桌面版（Electron）整合
+## Phase 3 — 桌面版（Tauri）整合
 
 **分支：** `phase-3`
 
+**決策記錄**
+
+- 原計畫使用 Electron，改為 **Tauri**（Rust + WebView）。理由：打包體積小、記憶體佔用低，且原生 API 透過 Rust 呼叫更安全。需事先安裝 Rust toolchain。
+
 **進度總覽**
-- 總任務數：4
-- 已完成：0
+- 總任務數：5
+- 已完成：3
 - 進行中：0
-- 待開始：4
+- 待開始：2
 
 **任務清單**
 
 | # | 任務 | 狀態 | 備註 |
 |---|------|------|------|
-| 1 | Nuxt 4 + Electron 開發環境建立 | ⬜ 待開始 | |
-| 2 | 透明背景視窗 + 置頂切換 | ⬜ 待開始 | |
-| 3 | 滑鼠穿透（預設穿透，互動時暫停） | ⬜ 待開始 | |
-| 4 | 寵物在螢幕底部自動左右走動 | ⬜ 待開始 | |
+| 1 | Tauri 基礎整合 | ✅ 完成 | `@tauri-apps/cli` + `@tauri-apps/api` 安裝；`src-tauri/` 建立；identifier 設為 `com.pixelpet.app`；tauri info 全綠 |
+| 2 | 透明背景視窗 | ✅ 完成 | `decorations: false`、`transparent: true`；視窗 128×128；`/desktop` 頁面透明背景顯示 PixelPet |
+| 3 | 寵物在螢幕底部走動 | ✅ 完成 | Tauri API 調整視窗至螢幕底部；`setInterval` 驅動左右移動；`scaleX(-1)` 翻轉方向；使用 walk 幀 |
+| 4 | 置頂切換 | ⬜ 待開始 | 可切換寵物是否顯示在所有視窗之上 |
+| 5 | 滑鼠穿透 | ⬜ 待開始 | 預設穿透，互動時暫停穿透 |
+
+**實作順序說明**
+
+任務 1（Tauri 環境）是所有任務的前提。優先完成任務 2（透明背景）與任務 3（寵物走動），驗證核心桌面體驗後再做 4、5。
+
+**技術筆記**
+
+- 現有基礎：`usePixelCanvas.ts` 處理像素渲染，`useEditorStore`（Pinia）管理幀與動作資料，localStorage 已存讀寵物創作
+- Tauri + Nuxt 4 整合：`npm create tauri-app` 或手動在現有專案加入 `@tauri-apps/cli`，Nuxt 作為前端 devUrl
+- 透明視窗：`tauri.conf.json` 設定 `"decorations": false`、`"transparent": true`
+- 滑鼠穿透：Tauri `set_ignore_cursor_events(true)`，需要互動時暫時關閉
+- 走動邏輯：在 Vue 層用 `setInterval` 更新 x 座標，碰牆反向，動畫幀切換
 
 ---
 
